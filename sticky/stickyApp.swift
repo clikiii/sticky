@@ -13,5 +13,6 @@ struct stickyApp: App {
         WindowGroup {
             ContentView()
         }
+//        .windowStyle(HiddenTitleBarWindowStyle())
     }
 }
