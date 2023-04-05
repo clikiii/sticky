@@ -15,7 +15,7 @@ struct Home: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            SideBar()
+//            SideBar()
             
             Rectangle()
                 .fill(Color.gray.opacity(0.15))
@@ -23,89 +23,101 @@ struct Home: View {
             
             MainContent()
         }
-        .ignoresSafeArea()
         .frame(width: getRect().width / 1.7, height: getRect().height - 180, alignment: .leading)
         .background(Color("Bg").ignoresSafeArea())
         .preferredColorScheme(.light)
     }
     
+    
     @ViewBuilder
     func MainContent() -> some View {
         VStack(spacing: 15) {
-            HStack(spacing: 6) {
-                Image(systemName: "magnifyingglass")
-                    .font(.title3)
-                    .foregroundColor(.gray)
-                TextField("Search", text: $searchText)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .overlay(
-                Rectangle()
-                    .fill(Color.gray.opacity(0.3))
-                    .frame(height: 1)
-                    .padding(.horizontal, 6)
-                    .offset(x: 15, y: 6),
-                
-                alignment: .bottom
-            )
+            
+            SearchPart()
+                .offset(y: 15)
             
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 15) {
-                    Text("Notes")
-                        .font(.system(size: 33, weight: .bold))
-                }
-                .padding(.top, 15)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                
-                let columns = Array(repeating: GridItem(.flexible(), spacing: 25), count: 3)
-                LazyVGrid(columns: columns) {
-                    ForEach(notes){note in
-                        CardView(note: note)
-                    }
-                }
-                .padding(.top, 20)
+                MemoPart()
+                ColPart()
             }
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .padding(.horizontal, 25)
         .padding(.top, 25)
     }
     
+    
     @ViewBuilder
-    func CardView(note: Note) -> some View {
-        VStack {
-            Text(note.note)
-                .font(.title3)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .frame(minHeight: 80, maxHeight: 80)
+    func SearchPart() -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 33, weight: .light))
+                .foregroundColor(.black)
+                .rotationEffect(.init(degrees: 90 ))
+            TextField("Search memo content", text: $searchText)
+                .font(.system(size: 20, weight: .light))
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+//        .overlay(
+//            Rectangle()
+//                .fill(Color.gray.opacity(0.8))
+//                .frame(height: 1)
+//                .padding(.horizontal, 10)
+//                .offset(x: 10, y: 6),
+//
+//            alignment: .bottom
+//        )
+    }
+    
+    
+    @ViewBuilder
+    func MemoPart() -> some View {
+        
+        VStack(spacing: 15) {
+            Text("Recent")
+                .font(.system(size: 33, weight: .regular))
+        }
+        .padding(.top, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        
+        ScrollView(.horizontal, showsIndicators: false) {
             
-            HStack {
-                Text(note.date, style: .date)
-                    .foregroundColor(.black)
-                    .opacity(0.8)
-                
-                
-                Spacer(minLength: 0)
-                
-                Button {
-                    
-                } label: {
-                    Image(systemName: "pencil")
-                        .font(.system(size: 15, weight: .bold))
-                        .padding(8)
-                        .foregroundColor(.white)
-                        .background(Color.black)
-                        .clipShape(Circle())
+            let rows = Array(repeating: GridItem(.flexible()), count: 1)
+            LazyHGrid(rows: rows, spacing: 15) {
+                ForEach(notes){note in
+                    CardView(note: note)
                 }
             }
-            .padding(.top, 55)
         }
-        .frame(minHeight: 100, maxHeight: 180)
-        .padding()
-        .background(note.cardColor)
-        .cornerRadius(18)
+        .padding(.bottom, 25)
+        
     }
+    
+    
+    @ViewBuilder
+    func ColPart() -> some View {
+        
+        VStack(spacing: 15) {
+            Text("Collections")
+                .font(.system(size: 33, weight: .regular))
+        }
+        .padding(.top, 20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        
+        ScrollView(.horizontal, showsIndicators: false) {
+            
+            let rows = Array(repeating: GridItem(.flexible()), count: 1)
+            LazyHGrid(rows: rows, spacing: 15) {
+                ForEach(notes){note in
+                    CardView(note: note)
+                }
+            }
+        }
+        .padding(.bottom, 25)
+        
+    }
+    
     
     @ViewBuilder
     func SideBar() -> some View {
@@ -137,6 +149,7 @@ struct Home: View {
         .padding(.top, 35)
     }
     
+    
     @ViewBuilder
     func AddButton() -> some View {
         Button {
@@ -164,6 +177,7 @@ struct Home: View {
         .padding(.top, 35)
     }
 }
+
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
