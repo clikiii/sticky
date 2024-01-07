@@ -10,3 +10,4 @@ This version is typically for MacOS.
 - [ ] Check the usability of the library
 
 This project will continue later.
+Remember to delete `.DS_Store`.
